@@ -3,9 +3,7 @@ description: 分析 Android 项目 Kotlin 文件
 globs: 
 alwaysApply: false
 ---
-# Android 项目 Kotlin 文件分析输出规则
-
-## 分析结果应输出到一个新的 Markdown 文件中
+# Android 项目 Kotlin 文件分析规则：分析结果应输出到一个新的 Markdown 文件中
 
 要求：
 
