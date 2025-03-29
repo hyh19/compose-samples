@@ -1,41 +1,14 @@
 ---
-description: 确保所有中英文混合文档严格遵循统一的排版规范
-globs: ["**/*.md"]
+description: 确保所有中英文混合文档严格遵循统一的排版规范，提高文档的可读性和专业性
+globs:
 alwaysApply: true
 ---
+<!-- modified: 2025-03-27 -->
 # 中文文案排版规范
-
-## 目录
-
-- [中文文案排版规范](#中文文案排版规范)
-  - [目录](#目录)
-  - [描述](#描述)
-  - [应用条件](#应用条件)
-  - [规则内容](#规则内容)
-    - [1. 空格使用](#1-空格使用)
-    - [2. 标点符号](#2-标点符号)
-    - [3. 全角和半角](#3-全角和半角)
-    - [4. 中英文混排](#4-中英文混排)
-    - [5. 段落与排版](#5-段落与排版)
-    - [6. 列表和编号](#6-列表和编号)
-    - [7. 用语规范](#7-用语规范)
-    - [8. 日期和时间格式](#8-日期和时间格式)
-    - [9. 专有名词处理](#9-专有名词处理)
-    - [10. 代码与中文混排](#10-代码与中文混排)
-  - [AI 处理建议](#ai-处理建议)
-  - [参考资料](#参考资料)
 
 ## 描述
 
 此规则文件用于确保所有中英文混合文档严格遵循统一的排版规范，提高文档的可读性和专业性。规范主要参考「中文文案排版指北」和 RightCapital 中文写作排版风格指南的标准，适用于各类文档的创建、修改和检查。
-
-## 应用条件
-
-当处理以下类型的文件时应用此规则：
-
-- **/*.md
-- **/*.txt
-- **/*.markdown
 
 ## 规则内容
 
@@ -227,8 +200,8 @@ alwaysApply: true
 
 ## 参考资料
 
-- [中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)
-- [中文写作排版风格指南](https://github.com/RightCapitalHQ/chinese-style-guide)
-- [中文技术文档的写作规范](https://github.com/ruanyf/document-style-guide)
-- [写给大家看的中文排版指南](https://zhuanlan.zhihu.com/p/20506092)
-- [Google 开发者文档风格指南](https://developers.google.com/style/chinese-language)
+- [中文文案排版指北](mdc:https:/github.com/sparanoid/chinese-copywriting-guidelines)
+- [中文写作排版风格指南](mdc:https:/github.com/RightCapitalHQ/chinese-style-guide)
+- [中文技术文档的写作规范](mdc:https:/github.com/ruanyf/document-style-guide)
+- [写给大家看的中文排版指南](mdc:https:/zhuanlan.zhihu.com/p/20506092)
+- [Google 开发者文档风格指南](mdc:https:/developers.google.com/style/chinese-language)

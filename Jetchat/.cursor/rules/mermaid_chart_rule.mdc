@@ -1,19 +1,13 @@
 ---
-description: 确保所有图表绘制需求使用 Mermaid 语法规范实现
-globs: ["**/*.md"]
-alwaysApply: true
+description: 确保所有需要绘制图表的需求使用 Mermaid 语法规范实现，提高文档中图表的一致性和可维护性
+globs: 
+alwaysApply: false
 ---
-# Mermaid 图表规范
+# Mermaid 图表绘制规则
 
 ## 描述
 
 此规则文件用于确保所有需要绘制图表的需求使用 Mermaid 语法规范实现，提高文档中图表的一致性、可维护性和可读性。
-
-## 应用条件
-
-当处理以下类型的文件时应用此规则：
-
-- **/*.md
 
 ## 规则内容
 
@@ -65,6 +59,6 @@ flowchart TD
 
 ## 参考资料
 
-- [Mermaid 官方文档](https://mermaid-js.github.io/mermaid/#/)
-- [Mermaid 在线编辑器](https://mermaid-js.github.io/mermaid-live-editor)
-- [Markdown 中使用 Mermaid 的最佳实践](https://mermaid-js.github.io/mermaid/#/integrations)
+- [Mermaid 官方文档](mdc:https:/mermaid-js.github.io/mermaid/#/)
+- [Mermaid 在线编辑器](mdc:https:/mermaid-js.github.io/mermaid-live-editor)
+- [Markdown 中使用 Mermaid 的最佳实践](mdc:https:/mermaid-js.github.io/mermaid/#/integrations)
