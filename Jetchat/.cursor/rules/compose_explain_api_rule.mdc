@@ -1,0 +1,16 @@
+---
+description: 讲解 Jetpack Compose API
+globs: 
+alwaysApply: false
+---
+# Jetpack Compose API 讲解规则
+
+## 讲解内容应输出到一个新的 Markdown 文件中
+
+- 文件名使用 API 的名称，后缀是 `.md`
+- 存放在项目的 `docs/api/` 目录下（如目录不存在，请创建）
+
+示例：
+
+- API: `derivedStateOf`
+- 文件命名：`docs/api/derivedStateOf.md`
