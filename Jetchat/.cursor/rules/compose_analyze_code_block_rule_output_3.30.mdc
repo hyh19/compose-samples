@@ -13,4 +13,4 @@ alwaysApply: false
 示例：
 
 - 代码块宿主文件：`path/to/file.kt`
-- 分析文件：`path/to/file.LXX-YY.md`
+- 分析文件：`path/to/file.kt.LXX-YY.md`
