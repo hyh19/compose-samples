@@ -513,6 +513,164 @@ fun LazyLoadingExample() {
 }
 ```
 
+### 渲染优化
+
+`AnimatedVisibility` 在渲染方面提供了多种优化：
+
+- **按需渲染**：只在可见或动画过程中渲染内容，不可见时完全移除
+- **硬件加速**：内部动画默认启用硬件加速，提高渲染性能
+- **局部重绘**：只重绘动画中变化的部分，而非整个视图
+- **可预测的布局**：在动画开始前计算最终布局，减少中间布局计算
+
+以下是优化渲染性能的实践：
+
+```kotlin
+@Composable
+fun OptimizedRenderingExample() {
+    var visible by remember { mutableStateOf(false) }
+    
+    // 为复杂内容创建一个缓存策略
+    val cacheStrategy = remember {
+        // 使用适当的缓存策略，如 CacheDrawScope
+        DrawCacheKind.HardwareBitmapCache
+    }
+    
+    Column {
+        Button(onClick = { visible = !visible }) {
+            Text("切换")
+        }
+        
+        AnimatedVisibility(
+            visible = visible,
+            enter = fadeIn(),
+            exit = fadeOut()
+        ) {
+            // 使用 graphicsLayer 修饰符启用硬件加速
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(200.dp)
+                    .graphicsLayer()
+                    .drawWithCache {
+                        // 复杂绘制操作的缓存
+                        onDrawWithContent {
+                            // 渲染缓存内容
+                            drawContent()
+                        }
+                    }
+            ) {
+                // 复杂内容
+                ComplexContent()
+            }
+        }
+    }
+}
+```
+
+### 自定义扩展
+
+基于 `AnimatedVisibility` 可以创建自定义的动画组件：
+
+```kotlin
+/**
+ * 创建一个从底部滑入的提示卡片
+ */
+@Composable
+fun SlideInNotification(
+    visible: Boolean,
+    modifier: Modifier = Modifier,
+    duration: Int = 300,
+    content: @Composable () -> Unit
+) {
+    // 自定义过渡动画
+    val enterTransition = remember {
+        slideInVertically(
+            initialOffsetY = { it }, // 从底部滑入
+            animationSpec = tween(durationMillis = duration)
+        ) + fadeIn(animationSpec = tween(durationMillis = duration))
+    }
+    
+    val exitTransition = remember {
+        slideOutVertically(
+            targetOffsetY = { it }, // 滑出到底部
+            animationSpec = tween(durationMillis = duration)
+        ) + fadeOut(animationSpec = tween(durationMillis = duration))
+    }
+    
+    // 自动隐藏逻辑
+    val visibleState = remember { MutableTransitionState(false) }
+    
+    // 同步外部状态
+    LaunchedEffect(visible) {
+        visibleState.targetState = visible
+    }
+    
+    // 自动隐藏功能
+    LaunchedEffect(visibleState.currentState) {
+        if (visibleState.currentState) {
+            delay(3000) // 3秒后自动隐藏
+            visibleState.targetState = false
+        }
+    }
+    
+    Box(modifier = modifier.fillMaxSize()) {
+        AnimatedVisibility(
+            visibleState = visibleState,
+            enter = enterTransition,
+            exit = exitTransition,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(16.dp)
+        ) {
+            Surface(
+                color = MaterialTheme.colorScheme.surface,
+                shadowElevation = 6.dp,
+                shape = RoundedCornerShape(8.dp)
+            ) {
+                Box(
+                    Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth()
+                ) {
+                    content()
+                }
+            }
+        }
+    }
+}
+
+// 使用示例
+@Composable
+fun NotificationDemo() {
+    var showNotification by remember { mutableStateOf(false) }
+    
+    Column(Modifier.padding(16.dp)) {
+        Button(onClick = { showNotification = true }) {
+            Text("显示通知")
+        }
+        
+        SlideInNotification(visible = showNotification) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Icon(
+                    Icons.Default.Info,
+                    contentDescription = "通知",
+                    tint = MaterialTheme.colorScheme.primary
+                )
+                Spacer(Modifier.width(8.dp))
+                Text("这是一条重要通知")
+                Spacer(Modifier.weight(1f))
+                IconButton(onClick = { showNotification = false }) {
+                    Icon(
+                        Icons.Default.Close,
+                        contentDescription = "关闭"
+                    )
+                }
+            }
+        }
+    }
+}
+```
+
 ## 组合上下文和副作用
 
 ### 组合上下文
@@ -635,6 +793,73 @@ fun LifecycleExample() {
 | AnimatedContent | 状态转换动画 | 最强大灵活，支持复杂转换 | 学习曲线较陡 |
 | animateContentSize | 尺寸变化 | 轻量级，易于使用 | 仅动画化尺寸变化 |
 
+### 迁移路径
+
+从传统 View 系统迁移到 Compose 的 `AnimatedVisibility`：
+
+| View 系统动画 | Compose 对应方案 | 迁移建议 |
+|-------------|----------------|---------|
+| View.setVisibility() + Animation | AnimatedVisibility | 使用 visible 参数控制可见性，enter/exit 定义过渡效果 |
+| View.animate().alpha() | AnimatedVisibility + fadeIn/fadeOut | 通过组合 enter/exit 过渡实现透明度动画 |
+| TranslateAnimation | AnimatedVisibility + slideIn/slideOut | 使用 slideIn/slideOut 定义滑动方向和距离 |
+| ScaleAnimation | AnimatedVisibility + scaleIn/scaleOut | 使用 scaleIn/scaleOut 定义缩放比例和锚点 |
+| ObjectAnimator | AnimatedVisibility.animateEnterExit | 为子元素单独定义更精细的动画效果 |
+| LayoutTransition | AnimatedVisibility 与 animateContentSize 结合 | 共同处理容器和内容的过渡动画 |
+| ViewPropertyAnimator | Transition API + AnimatedVisibility | 对于复杂属性动画，使用底层 Transition API |
+
+**迁移示例：**
+
+传统 View 系统：
+
+```java
+// 显示视图
+view.setVisibility(View.VISIBLE);
+view.animate()
+    .alpha(1f)
+    .translationY(0f)
+    .setDuration(300)
+    .start();
+
+// 隐藏视图
+view.animate()
+    .alpha(0f)
+    .translationY(100f)
+    .setDuration(300)
+    .withEndAction(() -> {
+        view.setVisibility(View.GONE);
+    })
+    .start();
+```
+
+迁移到 Compose：
+
+```kotlin
+var visible by remember { mutableStateOf(false) }
+
+AnimatedVisibility(
+    visible = visible,
+    enter = fadeIn(animationSpec = tween(300)) + 
+            slideInVertically(
+                initialOffsetY = { it / 2 },
+                animationSpec = tween(300)
+            ),
+    exit = fadeOut(animationSpec = tween(300)) + 
+           slideOutVertically(
+               targetOffsetY = { it / 2 },
+               animationSpec = tween(300)
+           )
+) {
+    // 内容
+    YourContent()
+}
+```
+
+**注意事项：**
+
+- Compose 中的动画是声明式的，无需手动启动/停止
+- 传统系统中的动画监听器在 Compose 中可通过 `LaunchedEffect` 和 `MutableTransitionState` 替代
+- 复杂的属性动画可使用 `updateTransition` 和 `animate*AsState` API 实现
+
 ## 与 Compose 架构的关系
 
 ### 声明式 UI
@@ -652,6 +877,70 @@ fun LifecycleExample() {
 1. 上游状态变化（如 `visible` 状态改变）
 2. 触发重组和动画状态更新
 3. 根据动画状态渲染 UI，不影响上游数据
+
+### 状态下沉
+
+`AnimatedVisibility` 可以很好地融入状态下沉架构模式：
+
+- **状态提升**：将 `visible` 状态提升到组件外部，由父组件或 ViewModel 管理
+- **状态共享**：多个动画组件可以共享同一个状态源，实现协调动画
+- **状态隔离**：内部动画状态（如 `MutableTransitionState`）与业务逻辑分离
+- **单一可信源**：确保可见性状态有单一来源，避免状态不一致
+
+```kotlin
+// 状态下沉示例
+@Composable
+fun AnimatedContentWithStateHoisting(viewModel: ContentViewModel = viewModel()) {
+    // 状态由 ViewModel 管理，视图仅消费状态
+    val uiState by viewModel.uiState.collectAsState()
+    
+    Column {
+        // 控制按钮
+        Button(onClick = { viewModel.toggleContentVisibility() }) {
+            Text(if (uiState.isContentVisible) "隐藏" else "显示")
+        }
+        
+        // 使用下沉的状态
+        AnimatedVisibility(
+            visible = uiState.isContentVisible,
+            enter = fadeIn() + expandVertically(),
+            exit = fadeOut() + shrinkVertically()
+        ) {
+            // 内容区域
+            Card(Modifier.padding(16.dp).fillMaxWidth()) {
+                Text(
+                    "使用状态下沉模式控制的内容",
+                    modifier = Modifier.padding(16.dp)
+                )
+            }
+        }
+    }
+}
+
+// ViewModel 部分
+class ContentViewModel : ViewModel() {
+    // 不可变状态流，对外暴露
+    private val _uiState = MutableStateFlow(ContentUiState())
+    val uiState: StateFlow<ContentUiState> = _uiState.asStateFlow()
+    
+    // 业务逻辑方法
+    fun toggleContentVisibility() {
+        _uiState.update { it.copy(isContentVisible = !it.isContentVisible) }
+    }
+    
+    // UI 状态数据类
+    data class ContentUiState(
+        val isContentVisible: Boolean = false
+    )
+}
+```
+
+这种模式的优势：
+
+- 业务逻辑与 UI 分离，便于测试
+- 多个 UI 元素可以响应相同状态变化
+- 状态变化集中管理，便于调试和跟踪
+- 适合复杂页面和多层级组件结构
 
 ### 组合理念
 
@@ -680,4 +969,80 @@ flowchart TD
     
     F[EnterTransition/ExitTransition] --> D
     G[TransitionState] --> D
-</rewritten_file>
+```
+
+## 动画时序图
+
+`AnimatedVisibility` 动画执行过程的时序图：
+
+```mermaid
+sequenceDiagram
+    participant App as 应用程序
+    participant AV as AnimatedVisibility
+    participant TS as TransitionState
+    participant T as Transition
+    participant R as 渲染系统
+    
+    App->>AV: 设置 visible = true
+    AV->>TS: 更新目标状态
+    TS->>T: 创建/更新过渡动画
+    T->>T: 计算初始动画值
+    T-->>R: 应用初始动画值
+    
+    loop 每一帧
+        T->>T: 计算下一帧动画值
+        T-->>R: 更新视图
+        R-->>AV: 渲染内容
+    end
+    
+    T->>TS: 动画完成通知
+    TS->>AV: 更新当前状态
+    AV-->>App: 完成回调 (可选)
+    
+    Note over App,R: 当 visible 变为 false 时
+    
+    App->>AV: 设置 visible = false
+    AV->>TS: 更新目标状态
+    TS->>T: 创建/更新退出动画
+    
+    loop 每一帧
+        T->>T: 计算退出动画值
+        T-->>R: 更新视图
+        R-->>AV: 渲染逐渐消失的内容
+    end
+    
+    T->>TS: 动画完成通知
+    TS->>AV: 更新当前状态
+    AV->>AV: 从组合树中移除内容
+    AV-->>App: 完成回调 (可选)
+```
+
+## 状态流转图
+
+`AnimatedVisibility` 的状态流转过程：
+
+```mermaid
+stateDiagram-v2
+    [*] --> 初始不可见
+    初始不可见 --> 进入动画中: visible = true
+    初始不可见 --> 保持不可见: visible = false
+    
+    初始可见 --> 保持可见: visible = true
+    初始可见 --> 退出动画中: visible = false
+    [*] --> 初始可见
+    
+    进入动画中 --> 可见: 动画完成
+    进入动画中 --> 退出动画中: visible = false（动画中断）
+    
+    退出动画中 --> 不可见: 动画完成
+    退出动画中 --> 进入动画中: visible = true（动画中断）
+    
+    可见 --> 退出动画中: visible = false
+    可见 --> 保持可见: visible = true
+    
+    不可见 --> 进入动画中: visible = true
+    不可见 --> 保持不可见: visible = false
+    
+    保持可见 --> 保持可见: 重组
+    保持不可见 --> 保持不可见: 重组
+```
