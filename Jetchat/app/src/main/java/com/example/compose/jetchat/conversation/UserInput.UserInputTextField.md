@@ -60,9 +60,17 @@ UserInputTextField
 
 事件从 BasicTextField 捕获后，通过函数参数回调传递给父组件，形成单向数据流：
 
-1. 用户交互 → BasicTextField
-2. BasicTextField → UserInputTextField 回调
-3. UserInputTextField → 父组件 (通过回调函数)
+```mermaid
+sequenceDiagram
+    participant 用户
+    participant BasicTextField
+    participant UserInputTextField
+    participant 父组件
+
+    用户->>BasicTextField: 输入文本/焦点变化
+    BasicTextField->>UserInputTextField: 调用 onValueChange/onFocusChanged
+    UserInputTextField->>父组件: 调用 onTextChanged/onTextFieldFocused
+```
 
 ## 自定义与样式
 
