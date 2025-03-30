@@ -101,8 +101,8 @@ fun ThemeAwareButton(
             contentColor = contentColor
         )
     ) {
-        // 按钮内容会继承按钮的contentColor
-        // 但可以在这里使用LocalContentColor.current读取
+        // 按钮内容会继承按钮的 contentColor
+        // 但可以在这里使用 LocalContentColor.current 读取
         CompositionLocalProvider(
             LocalContentColor provides LocalContentColor.current.copy(alpha = 0.8f)
         ) {
@@ -142,17 +142,17 @@ fun CustomIconButton(
 ### 常见错误
 
 ```kotlin
-// 错误: 忽略主题定义的内容颜色
+// 错误：忽略主题定义的内容颜色
 @Composable
 fun IncorrectText() {
     // 硬编码颜色，不会随主题变化
     Text("固定颜色文本", color = Color.Black)
 }
 
-// 正确: 尊重主题颜色系统
+// 正确：尊重主题颜色系统
 @Composable
 fun CorrectText() {
-    // 使用LocalContentColor，随主题变化
+    // 使用 LocalContentColor，随主题变化
     Text("适配主题的文本", color = LocalContentColor.current)
 }
 ```
@@ -203,12 +203,12 @@ Material 组件如 Surface、Button 等会通过 CompositionLocalProvider 提供
 @Composable
 fun ContentAwareContainer() {
     Surface(color = MaterialTheme.colorScheme.primary) {
-        // 此处Surface已提供了适合primary背景的LocalContentColor
-        Text("文本颜色会自动适配背景") // 文本使用onPrimary颜色
+        // 此处 Surface 已提供了适合 primary 背景的 LocalContentColor
+        Text("文本颜色会自动适配背景") // 文本使用 onPrimary 颜色
         
         // 嵌套容器可以提供新的内容颜色
         Surface(color = MaterialTheme.colorScheme.secondary) {
-            // 此处文本会使用onSecondary颜色
+            // 此处文本会使用 onSecondary 颜色
             Text("嵌套容器中的文本颜色也会适配")
         }
     }
