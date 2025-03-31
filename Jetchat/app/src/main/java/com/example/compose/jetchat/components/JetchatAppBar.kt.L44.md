@@ -1,4 +1,4 @@
-# Jetpack Compose 代码块分析：JetchatAppBar actions 参数实现
+# 代码块分析报告：JetchatAppBar actions 参数实现
 
 ## 1. 业务逻辑分析
 

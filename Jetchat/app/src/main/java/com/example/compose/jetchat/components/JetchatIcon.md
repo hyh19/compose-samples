@@ -1,4 +1,4 @@
-# JetchatIcon 组件分析
+# JetchatIcon 组件分析报告
 
 ## 1. 基本信息
 

@@ -1,4 +1,4 @@
-# ClickableMessage 组件分析
+# ClickableMessage 组件分析报告
 
 ## 基本信息
 

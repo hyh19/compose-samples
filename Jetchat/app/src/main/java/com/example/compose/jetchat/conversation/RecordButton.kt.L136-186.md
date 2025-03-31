@@ -1,4 +1,4 @@
-# Jetpack Compose 代码块分析：voiceRecordingGesture Modifier 实现
+# 代码块分析报告：voiceRecordingGesture Modifier 实现
 
 这段代码实现了一个用于录音的自定义 Modifier，提供了长按开始录音、滑动取消录音的手势交互功能。
 

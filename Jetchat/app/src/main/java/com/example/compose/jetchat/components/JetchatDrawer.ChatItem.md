@@ -1,4 +1,4 @@
-# ChatItem 组件分析
+# ChatItem 组件分析报告
 
 ## 1. 基本信息
 

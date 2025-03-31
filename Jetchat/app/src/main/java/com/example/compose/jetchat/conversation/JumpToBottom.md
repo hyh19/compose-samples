@@ -1,4 +1,4 @@
-# JumpToBottom 组件分析
+# JumpToBottom 组件分析报告
 
 ## 1. 基本信息
 

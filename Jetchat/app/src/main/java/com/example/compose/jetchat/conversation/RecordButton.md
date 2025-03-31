@@ -1,4 +1,4 @@
-# RecordButton 组件分析
+# RecordButton 组件分析报告
 
 ## 1. 基本信息
 

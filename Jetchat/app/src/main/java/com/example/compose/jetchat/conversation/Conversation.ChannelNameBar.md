@@ -1,4 +1,4 @@
-# ChannelNameBar 组件分析
+# ChannelNameBar 组件分析报告
 
 ## 基本信息
 
