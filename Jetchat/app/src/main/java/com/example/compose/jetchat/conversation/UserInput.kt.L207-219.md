@@ -14,10 +14,10 @@
 
 ```mermaid
 flowchart LR
-    A[输入: 当前TextFieldValue] --> B[计算新文本内容]
+    A[输入: 当前 TextFieldValue] --> B[计算新文本内容]
     B --> C[创建新选择位置]
-    C --> D[生成新TextFieldValue]
-    D --> E[输出: 更新后的TextFieldValue]
+    C --> D[生成新 TextFieldValue]
+    D --> E[输出: 更新后的 TextFieldValue]
 ```
 
 这个函数是无状态的纯函数，不涉及状态管理或副作用处理，符合函数式编程范式。它被设计为 TextFieldValue 的扩展函数，使其可以方便地在文本输入相关的代码中链式调用。
