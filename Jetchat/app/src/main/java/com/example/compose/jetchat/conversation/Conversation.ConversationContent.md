@@ -1,4 +1,4 @@
-# Jetpack Compose 组件分析报告：ConversationContent
+# ConversationContent 组件分析报告
 
 ## 1. 基本信息
 
