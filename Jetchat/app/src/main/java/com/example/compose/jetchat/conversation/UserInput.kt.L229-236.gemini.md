@@ -1,17 +1,16 @@
-# Jetpack Compose 代码块分析 (L229-L236)
+# Jetpack Compose 代码块分析
 
-分析文件：`app/src/main/java/com/example/compose/jetchat/conversation/UserInput.kt`
-代码块行数：229-236
+## 代码块
 
 ```kotlin
-    // Request focus to force the TextField to lose it
-    val focusRequester = FocusRequester()
-    // If the selector is shown, always request focus to trigger a TextField.onFocusChange.
-    SideEffect {
-        if (currentSelector == InputSelector.EMOJI) {
-            focusRequester.requestFocus()
-        }
-    }
+  // Request focus to force the TextField to lose it
+  val focusRequester = FocusRequester()
+  // If the selector is shown, always request focus to trigger a TextField.onFocusChange.
+  SideEffect {
+      if (currentSelector == InputSelector.EMOJI) {
+          focusRequester.requestFocus()
+      }
+  }
 ```
 
 ## 分析详情
