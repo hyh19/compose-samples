@@ -1,23 +1,4 @@
-# Jetpack Compose 代码块分析：L329-342
-
-## 代码块
-
-```kotlin
-// Jump to bottom button shows up when user scrolls past a threshold.
-// Convert to pixels:
-val jumpThreshold = with(LocalDensity.current) {
-    JumpToBottomThreshold.toPx()
-}
-
-// Show the button if the first visible item is not the first one or if the offset is
-// greater than the threshold.
-val jumpToBottomButtonEnabled by remember {
-    derivedStateOf {
-        scrollState.firstVisibleItemIndex != 0 ||
-            scrollState.firstVisibleItemScrollOffset > jumpThreshold
-    }
-}
-```
+# Jetpack Compose 代码块分析：消息列表跳转按钮实现
 
 ## 业务逻辑分析
 

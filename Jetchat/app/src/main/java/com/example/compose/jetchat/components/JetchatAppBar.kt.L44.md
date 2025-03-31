@@ -1,10 +1,6 @@
-# JetchatAppBar 组件中的 actions 参数分析
+# Jetpack Compose 代码块分析：JetchatAppBar actions 参数实现
 
 ## 1. 业务逻辑分析
-
-```kotlin
-actions: @Composable RowScope.() -> Unit = {}
-```
 
 ### 功能与作用
 
