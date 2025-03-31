@@ -3,14 +3,14 @@
 ## 代码块
 
 ```kotlin
-  // Request focus to force the TextField to lose it
-  val focusRequester = FocusRequester()
-  // If the selector is shown, always request focus to trigger a TextField.onFocusChange.
-  SideEffect {
-      if (currentSelector == InputSelector.EMOJI) {
-          focusRequester.requestFocus()
-      }
-  }
+// Request focus to force the TextField to lose it
+val focusRequester = FocusRequester()
+// If the selector is shown, always request focus to trigger a TextField.onFocusChange.
+SideEffect {
+    if (currentSelector == InputSelector.EMOJI) {
+        focusRequester.requestFocus()
+    }
+}
 ```
 
 ## 分析详情
@@ -19,10 +19,17 @@
 
 - **核心功能**: 这段代码的主要目的是管理 Jetpack Compose 中的焦点。具体来说，它用于在特定的输入选择器（在这里是 Emoji 选择器）显示时，准备并可能触发一次焦点请求。
 - **交互流程**:
-    1. 创建一个 `FocusRequester` 实例，这是一个用于后续请求焦点的句柄。
-    2. 使用 `SideEffect` 块，在每次成功重组后执行检查。
-    3. 检查当前的 `currentSelector` 是否为 `InputSelector.EMOJI`。
-    4. 如果是 Emoji 选择器，则调用 `focusRequester.requestFocus()`。
+
+```mermaid
+flowchart TB
+    Start[开始] --> Init["创建 FocusRequester 实例"]
+    Init --> SideEffect["执行 SideEffect<br>（在每次成功重组后）"]
+    SideEffect --> Check{"currentSelector<br>== InputSelector.EMOJI?"}
+    Check -->|是| Request["focusRequester.requestFocus()<br>请求焦点转移"]
+    Check -->|否| End[结束]
+    Request --> End
+```
+
 - **设计意图**: 其目的是确保当 Emoji 选择器面板展开时，能够将焦点从主文本输入框 (`UserInputTextField`) 转移到 Emoji 选择器本身（或其容器）。这有助于管理软键盘的显示/隐藏，并通过触发文本输入框的 `onFocusChanged` 回调来更新相关的 UI 状态。`focusRequester` 会被传递给 `EmojiSelector` 组件，并在那里通过 `Modifier.focusRequester()` 应用到实际的 UI 元素上，使得 `requestFocus()` 调用生效。
 - **状态管理**: 依赖于外部传入的 `currentSelector` 状态来决定是否执行焦点请求。
 
