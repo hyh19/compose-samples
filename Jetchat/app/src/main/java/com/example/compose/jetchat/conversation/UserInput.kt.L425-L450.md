@@ -1,36 +1,5 @@
 # Jetchat 输入消息组件动态内容切换分析
 
-## 代码概览
-
-```kotlin
-AnimatedContent(
-    targetState = isRecordingMessage,
-    label = "text-field",
-    modifier = Modifier
-        .weight(1f)
-        .fillMaxHeight()
-) { recording ->
-    Box(Modifier.fillMaxSize()) {
-        if (recording) {
-            RecordingIndicator { swipeOffset.value }
-        } else {
-            UserInputTextField(
-                textFieldValue,
-                onTextChanged,
-                onTextFieldFocused,
-                keyboardType,
-                focusState,
-                onMessageSent,
-                Modifier.fillMaxWidth().semantics {
-                    contentDescription = a11ylabel
-                    keyboardShownProperty = keyboardShown
-                }
-            )
-        }
-    }
-}
-```
-
 ## 业务逻辑分析
 
 该代码块实现了聊天应用中输入区域的核心动态切换功能，根据当前是否处于录音状态来展示不同的 UI 界面。
